@@ -1,0 +1,106 @@
+﻿
+@{
+    ViewBag.Title = "My Angular Table Sample";
+}
+
+<style>
+    .nopadding {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .pointerable{
+        cursor:pointer;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>@ViewBag.Title</h2>
+        <p>
+            Bu örnekte bir tablo verisinin JS GET isteği ile doldurularak kolon başlıklarında filter edilebilmesi sağlanmaya çalışılmaktadır. Birden çok kolon aynı anda filtrelenebilmektedir. Aynı zamanda filtreleme yapılan kolonun yanındaki filtre işareti kırmızıya dönüştürülür ve sil düğmesi çıkarılır. Sil işlemi ile filtre silinir.
+        </p>
+        <hr />
+    </div>
+
+    <div class="col-md-12" ng-controller="ctrlTableController">
+        <table class="table table-bordered table-hover text-center">
+            <thead>
+                <tr>
+                    <th class="text-center nopadding">
+                        <div class="input-group">
+                            <span class="input-group-addon"><b>First Name</b></span>
+                            <input type="text" class="form-control" placeholder="search for name"
+                                   ng-model="finder.Name" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-filter"
+                                      ng-class="{'text-danger': finder.Name != '' }"></span>
+                                <span class="glyphicon glyphicon-remove text-danger pointerable" data-toggle="popover"           data-placement="top" data-content="Click for Remove filter" 
+                                      onmouseover="$(this).popover('show')"  onmouseout="$(this).popover('hide')"
+                                      ng-show="finder.Name != ''" ng-click="finder.Name = ''"></span>
+                            </span>
+                        </div>
+                    </th>
+                    <th class="text-center nopadding">
+                        <div class="input-group">
+                            <span class="input-group-addon"><b>Last Name</b></span>
+                            <input type="text" class="form-control" placeholder="search for surname"
+                                   ng-model="finder.Surname" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-filter"
+                                      ng-class="{'text-danger': finder.Surname != '' }"></span>
+                                <span class="glyphicon glyphicon-remove text-danger pointerable" data-toggle="popover"           data-placement="top" data-content="Click for Remove filter" 
+                                      onmouseover="$(this).popover('show')"  onmouseout="$(this).popover('hide')"
+                                      ng-show="finder.Surname != ''" ng-click="finder.Surname = ''"></span>
+                            </span>
+                        </div>
+                    </th>
+                    <th class="text-center nopadding">
+                        <div class="input-group">
+                            <span class="input-group-addon"><b>Age</b></span>
+                            <input type="text" class="form-control" placeholder="search for age"
+                                   ng-model="finder.Age" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-filter"
+                                      ng-class="{'text-danger': finder.Age != '' }"></span>
+                                <span class="glyphicon glyphicon-remove text-danger pointerable" data-toggle="popover"           data-placement="top" data-content="Click for Remove filter" 
+                                      onmouseover="$(this).popover('show')"  onmouseout="$(this).popover('hide')"
+                                      ng-show="finder.Age != ''" ng-click="finder.Age = ''"></span>
+                            </span>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in items | filter : finder">
+                    <td ng-bind="item.Name"></td>
+                    <td ng-bind="item.Surname"></td>
+                    <td ng-bind="item.Age"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    /// <reference path="/Scripts/angular.js" />
+
+    var app = angular.module("myapp", []);
+
+    app.controller("ctrlTableController", function ($scope, $http) {
+
+        $scope.items = null
+        $scope.finder = {
+            Name: "",
+            Surname: "",
+            Age: ""
+        };
+
+        $http.get("/Home/GetSampleData?count=20").then(function (response) {
+            $scope.items = response.data;
+        });
+
+    });
+
+</script>
